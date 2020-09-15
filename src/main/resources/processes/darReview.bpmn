@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0mepyg4" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.1">
+  <bpmn:collaboration id="Collaboration_1lo9lw9">
+    <bpmn:participant id="HDRUKDAR" name="HDRUK_DAR" processRef="Process_0tmd7y3" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0tmd7y3" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_093zu9e</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0rkzrxj" name="End">
+      <bpmn:incoming>Flow_1t5jvw8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Activity_0e3uuz6" name="Review Dar" default="Flow_1t5jvw8">
+      <bpmn:incoming>Flow_093zu9e</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t5jvw8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_093zu9e" sourceRef="StartEvent_1" targetRef="Activity_0e3uuz6" />
+    <bpmn:sequenceFlow id="Flow_1t5jvw8" sourceRef="Activity_0e3uuz6" targetRef="Event_0rkzrxj" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1lo9lw9">
+      <bpmndi:BPMNShape id="Participant_1ientcl_di" bpmnElement="HDRUKDAR" isHorizontal="true">
+        <dc:Bounds x="129" y="79" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_093zu9e_di" bpmnElement="Flow_093zu9e">
+        <di:waypoint x="228" y="200" />
+        <di:waypoint x="350" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t5jvw8_di" bpmnElement="Flow_1t5jvw8">
+        <di:waypoint x="450" y="200" />
+        <di:waypoint x="582" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="192" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="198" y="225" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rkzrxj_di" bpmnElement="Event_0rkzrxj">
+        <dc:Bounds x="582" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="590" y="225" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0seg03j_di" bpmnElement="Activity_0e3uuz6">
+        <dc:Bounds x="350" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
