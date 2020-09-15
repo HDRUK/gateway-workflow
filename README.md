@@ -92,6 +92,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DATA_SOURCE=postgresDb
+      - DATA_USER=test_user
+      - DATA_PASS=test_user_password
 ```
 
 ## License
