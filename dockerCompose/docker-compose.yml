@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+  postgresDb:
+    image: postgres
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_user_password
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  sonarqube:
+    image: sonarqube
+    depends_on:
+      - postgresDb
+    ports:
+      - 9000:9000
+    environment:
+      - sonar.jdbc.username=test_user
+      - sonar.jdbc.password=test_user_password
+      - sonar.jdbc.url=jdbc:postgresql://postgresDb:5432/sonar
+
+  redis: 
+    image: redis
+    ports:
+      - 6379:6379
+
+  gatewayworkflow:
+    image: gateway-workflow:1.0
+    depends_on:
+      - postgresDb
+      - redis
+    ports: 
+      - 8081:8080
+    environment:
+      - ENV=default
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATA_SOURCE=postgresDb
+      - DATA_USER=test_user
+      - DATA_PASS=test_user_password

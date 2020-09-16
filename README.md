@@ -128,4 +128,27 @@ services:
       - DATA_PASS=test_user_password
 ```
 
+## Running the docker-compose script
+Using a terminal navigate to the dockerCompose folder in the project.
+
+To start the containers run the following command in a terminal.
+```bash
+docker-compose up
+```
+
+To stop all containers and remove any stored data run
+```bash
+docker-compose down
+```
+
+## Validate Running of containers
+To validate the containers are running execute. You should see 4 images listed; gateway-workflow:1.0, sonarqube, redis, postgres
+```bash
+docker ps
+```
+
+- Camunda portal - http://localhost:8081/camunda/app/welcome/default/
+- Sonarqube - http://localhost:9000/
+- PGAdmin - This can be gotten from the PGAdmin application. Enter the host, port, username and password to access the instance.
+
 ## License
