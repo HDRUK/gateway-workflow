@@ -3,13 +3,13 @@
 This is a Java/Spring Boot application, which acts as a host/platform for the [Camunda BPMN](https://camunda.com/). Primarily adds BPMN functionality for DAR review processes. It negotiates with [gateway-api](https://github.com/HDRUK/gateway-api) to determine processes and provide metrics around DAR processes.
 
 ## Application technical stack
+- IDE: Intellij IDEA (For editing configuration and source code only)
 - Java 8
 - Spring Boot
 - Spring Web
 - Spring Data and Hibernate
 - Lombok
 - Postgre SQL (to deploy database tables to Docker container for integration tests)
-- Google Storage
 - Google Secret Manager
 - Docker (to run the Application, Redis, Postgre and SonarQ)
 - SonarQ (Quality code analysis)
@@ -19,12 +19,44 @@ This is a Java/Spring Boot application, which acts as a host/platform for the [C
 
 *Requirements*
 
+- IDE: Intellij IDEA (For editing configuration and source code only)
 - Java 1.8+ SDK installed
 - Maven
 - Docker
 - Pg Admin (PostgreSQL web client)
 - Postman or any other http client (to test API's on JSON format)
 
+### Install Maven
+Maven can be installed via brew or downloaded from the maven site directly
+
+#### Brew
+```bash
+brew install maven
+```
+
+#### Maven Archive
+Download https://maven.apache.org/download.cgi
+
+Extract the contents of the downloaded archive to a folder on your computer.
+Once done add the path to the extracted version of maven to the 'PATH' environment variable.
+```bash
+export PATH=$PATH:<MAVEN HOME FOLDER HERE>/bin
+``` 
+
+#### Check if maven has been installed
+
+To check that maven has been installed from either of the two steps above you can run
+```bash
+mvn -v
+```
+
+### Install SDKMan to manage your java versions
+SDKMan https://sdkman.io/install
+
+#### Install an SDK version
+```bash
+sdk install java 11.0.8.hs-adpt
+```
 
 ## Installation (Minimum Setup - Local Only)
 
@@ -80,8 +112,8 @@ services:
     ports:
       - 6379:6379
 
-  hdrukWorkflow:
-    image: hdruk-workflow:1.0
+  gatewayworkflow:
+    image: gateway-workflow:1.0
     depends_on:
       - postgresDb
       - redis
@@ -95,5 +127,28 @@ services:
       - DATA_USER=test_user
       - DATA_PASS=test_user_password
 ```
+
+## Running the docker-compose script
+Using a terminal navigate to the dockerCompose folder in the project.
+
+To start the containers run the following command in a terminal.
+```bash
+docker-compose up
+```
+
+To stop all containers and remove any stored data run
+```bash
+docker-compose down
+```
+
+## Validate Running of containers
+To validate the containers are running execute. You should see 4 images listed; gateway-workflow:1.0, sonarqube, redis, postgres
+```bash
+docker ps
+```
+
+- Camunda portal - http://localhost:8081/camunda/app/welcome/default/
+- Sonarqube - http://localhost:9000/
+- PGAdmin - This can be gotten from the PGAdmin application. Enter the host, port, username and password to access the instance.
 
 ## License
