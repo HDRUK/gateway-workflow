@@ -3,13 +3,13 @@
 This is a Java/Spring Boot application, which acts as a host/platform for the [Camunda BPMN](https://camunda.com/). Primarily adds BPMN functionality for DAR review processes. It negotiates with [gateway-api](https://github.com/HDRUK/gateway-api) to determine processes and provide metrics around DAR processes.
 
 ## Application technical stack
+- IDE: Intellij IDEA
 - Java 8
 - Spring Boot
 - Spring Web
 - Spring Data and Hibernate
 - Lombok
 - Postgre SQL (to deploy database tables to Docker container for integration tests)
-- Google Storage
 - Google Secret Manager
 - Docker (to run the Application, Redis, Postgre and SonarQ)
 - SonarQ (Quality code analysis)
@@ -19,6 +19,7 @@ This is a Java/Spring Boot application, which acts as a host/platform for the [C
 
 *Requirements*
 
+- IDE: Intellij IDEA (For editing configuration and source code only)
 - Java 1.8+ SDK installed
 - Maven
 - Docker
