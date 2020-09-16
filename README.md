@@ -3,7 +3,7 @@
 This is a Java/Spring Boot application, which acts as a host/platform for the [Camunda BPMN](https://camunda.com/). Primarily adds BPMN functionality for DAR review processes. It negotiates with [gateway-api](https://github.com/HDRUK/gateway-api) to determine processes and provide metrics around DAR processes.
 
 ## Application technical stack
-- IDE: Intellij IDEA
+- IDE: Intellij IDEA (For editing configuration and source code only)
 - Java 8
 - Spring Boot
 - Spring Web
