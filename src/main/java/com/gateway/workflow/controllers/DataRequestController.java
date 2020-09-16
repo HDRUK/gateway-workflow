@@ -3,6 +3,7 @@ package com.gateway.workflow.controllers;
 import com.gateway.workflow.dtos.DarHistoryDto;
 import com.gateway.workflow.services.DataRequestService;
 import javassist.NotFoundException;
+import org.camunda.bpm.engine.history.HistoricDetailQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,7 @@ public class DataRequestController extends BaseController {
 
     @GetMapping(value = "/history/requests/{businessKey}")
     @ResponseStatus(OK)
-    public DarHistoryDto darRequestHistory(@PathVariable("businessKey") String businessKey,
-                                           @Valid @RequestBody DarHistoryDto darHistoryDto) throws NotFoundException {
-        return dataRequestService.getDarRequestHistory(businessKey, darHistoryDto);
+    public HistoricDetailQuery darRequestHistory(@PathVariable("businessKey") String businessKey) throws NotFoundException {
+        return dataRequestService.getDarRequestHistory(businessKey);
     }
 }

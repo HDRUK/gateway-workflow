@@ -12,4 +12,9 @@ public class ConstantPropertiesUtil {
     public static final String REQUESTED_BY = "requestedBy";
     public static final String STATUS_TYPE = "statusType";
     public static final String UPDATED_BY = "updatedBy";
+
+    public static final String DATA_REQUEST_STATUS = "applicationStatus";
+    public static final String DATA_REQUEST_DATETIME = "dateSubmitted";
+    public static final String DATA_REQUEST_PUBLISHER = "publisher";
+    public static final String DATA_REQUEST_ARCHIVED = "archived";
 }

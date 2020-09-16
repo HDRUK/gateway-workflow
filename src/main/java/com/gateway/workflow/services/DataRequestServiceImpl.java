@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.gateway.workflow.util.ConstantPropertiesUtil.DATA_REQUEST_STATUS;
+
 @Service
 public class DataRequestServiceImpl implements DataRequestService {
 
@@ -28,17 +30,17 @@ public class DataRequestServiceImpl implements DataRequestService {
     private HistoryService historyService;
 
     @Override
-    public DarHistoryDto getDarRequestHistory(String businessKey, DarHistoryDto darHistoryDto) throws NotFoundException {
+    public HistoricDetailQuery getDarRequestHistory(String businessKey) throws NotFoundException {
         String processId = getProcessTask(businessKey).getProcessInstanceId();
         HistoricDetailQuery hdq = historyService.createHistoricDetailQuery().processInstanceId(processId).variableUpdates();
 
-        return new DarHistoryDto();
+        return hdq;
     }
 
     private DarHistoryDto getProcessHistory(String processId) {
         Optional<HistoricDetail> historicDetail = historyService.createHistoricDetailQuery()
                 .processInstanceId(processId).orderByTime().asc().variableUpdates().list().stream()
-                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(""))
+                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(DATA_REQUEST_STATUS))
                 .reduce((first, second) -> second);
 
         return new DarHistoryDto();

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0mepyg4" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.1">
   <bpmn:collaboration id="Collaboration_1lo9lw9">
-    <bpmn:participant id="HDRUKDAR" name="HDRUK_DAR" processRef="Process_0tmd7y3" />
+    <bpmn:participant id="HDRUKDAR" name="Gateway_Workflow_Simple" processRef="GatewayWorkflowSimple" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_0tmd7y3" isExecutable="true">
+  <bpmn:process id="GatewayWorkflowSimple" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Start">
       <bpmn:outgoing>Flow_093zu9e</bpmn:outgoing>
     </bpmn:startEvent>
@@ -22,13 +22,13 @@
       <bpmndi:BPMNShape id="Participant_1ientcl_di" bpmnElement="HDRUKDAR" isHorizontal="true">
         <dc:Bounds x="129" y="79" width="600" height="250" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_093zu9e_di" bpmnElement="Flow_093zu9e">
-        <di:waypoint x="228" y="200" />
-        <di:waypoint x="350" y="200" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1t5jvw8_di" bpmnElement="Flow_1t5jvw8">
         <di:waypoint x="450" y="200" />
         <di:waypoint x="582" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_093zu9e_di" bpmnElement="Flow_093zu9e">
+        <di:waypoint x="228" y="200" />
+        <di:waypoint x="350" y="200" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="192" y="182" width="36" height="36" />
