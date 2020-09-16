@@ -26,6 +26,37 @@ This is a Java/Spring Boot application, which acts as a host/platform for the [C
 - Pg Admin (PostgreSQL web client)
 - Postman or any other http client (to test API's on JSON format)
 
+### Install Maven
+Maven can be installed via brew or downloaded from the maven site directly
+
+#### Brew
+```bash
+brew install maven
+```
+
+#### Maven Archive
+Download https://maven.apache.org/download.cgi
+
+Extract the contents of the downloaded archive to a folder on your computer.
+Once done add the path to the extracted version of maven to the 'PATH' environment variable.
+```bash
+export PATH=$PATH:<MAVEN HOME FOLDER HERE>/bin
+``` 
+
+#### Check if maven has been installed
+
+To check that maven has been installed from either of the two steps above you can run
+```bash
+mvn -v
+```
+
+### Install SDKMan to manage your java versions
+SDKMan https://sdkman.io/install
+
+#### Install an SDK version
+```bash
+sdk install java 11.0.8.hs-adpt
+```
 
 ## Installation (Minimum Setup - Local Only)
 
@@ -81,8 +112,8 @@ services:
     ports:
       - 6379:6379
 
-  hdrukWorkflow:
-    image: hdruk-workflow:1.0
+  gatewayworkflow:
+    image: gateway-workflow:1.0
     depends_on:
       - postgresDb
       - redis
