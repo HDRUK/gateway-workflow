@@ -49,21 +49,17 @@ public class DataRequestServiceImpl implements DataRequestService {
                 .stream().map(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getActivityInstanceId()).distinct().collect(Collectors.toList());
 
         List<DarHistoryDto> darHistoryDtoList = new ArrayList<>();
-
         List<Date> timeStamp = new ArrayList<>();
-
         for (String actInstId: hdq) {
             DarHistoryDto temp = getProcessHistory(actInstId);
             timeStamp.add(temp.getTimeStamp());
             darHistoryDtoList.add(temp);
         }
 
-        Long timeInStatus = (timeStamp.get(1).getTime() - timeStamp.get(0).getTime());
-
         return DarHistoryAggDto.builder()
                 .darHistoryList(darHistoryDtoList)
                 .dataRequestId(businessKey)
-                .timeInStatus(timeInStatus)
+                .timeInStatus(timeStamp.get(1).getTime() - timeStamp.get(0).getTime())
                 .build();
     }
 
