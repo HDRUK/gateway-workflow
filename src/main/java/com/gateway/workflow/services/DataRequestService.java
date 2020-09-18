@@ -1,9 +1,9 @@
 package com.gateway.workflow.services;
 
-import com.gateway.workflow.dtos.DarHistoryDto;
+import com.gateway.workflow.dtos.DarHistoryAggDto;
 import javassist.NotFoundException;
 
 public interface DataRequestService {
 
-    DarHistoryDto getDarRequestHistory(String businessKey, DarHistoryDto darHistoryDto) throws NotFoundException;
+    DarHistoryAggDto getDarRequestHistory(String businessKey) throws NotFoundException;
 }
