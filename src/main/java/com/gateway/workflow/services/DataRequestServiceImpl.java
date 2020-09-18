@@ -52,7 +52,7 @@ public class DataRequestServiceImpl implements DataRequestService {
         List<Date> timeStamp = new ArrayList<>();
         for (String actInstId: hdq) {
             DarHistoryDto temp = getProcessHistory(actInstId);
-            timeStamp.add(temp.getTimeStamp());
+            timeStamp.add(temp.getDataTimeStamp());
             darHistoryDtoList.add(temp);
         }
 
@@ -86,7 +86,7 @@ public class DataRequestServiceImpl implements DataRequestService {
 
         Optional<DarHistoryDto> darHistoryDtoOptional = historicDetailOptionalStatus.map(x -> DarHistoryDto.builder()
                 .dataRequestStatus((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue())
-                .timeStamp((Date)((HistoricDetailVariableInstanceUpdateEntity)x).getTimestamp())
+                .dataTimeStamp((Date)((HistoricDetailVariableInstanceUpdateEntity)x).getTimestamp())
                 .build());
 
         historicDetailOptionalDateTime.map(x -> ((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue()))
