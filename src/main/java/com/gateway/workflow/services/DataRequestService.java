@@ -1,10 +1,9 @@
 package com.gateway.workflow.services;
 
-import com.gateway.workflow.dtos.DarHistoryDto;
+import com.gateway.workflow.dtos.DarHistoryAggDto;
 import javassist.NotFoundException;
-import org.camunda.bpm.engine.history.HistoricDetailQuery;
 
 public interface DataRequestService {
 
-    HistoricDetailQuery getDarRequestHistory(String businessKey) throws NotFoundException;
+    DarHistoryAggDto getDarRequestHistory(String businessKey) throws NotFoundException;
 }
