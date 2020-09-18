@@ -12,7 +12,6 @@ import java.util.Date;
 @ToString
 public class DarHistoryDto {
 
-    private String dataActivityId;
     private String dataRequestStatus;
     private String dataRequestDateTime;
     private String dataRequestPublisher;

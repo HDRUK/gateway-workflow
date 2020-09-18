@@ -87,7 +87,6 @@ public class DataRequestServiceImpl implements DataRequestService {
         Optional<DarHistoryDto> darHistoryDtoOptional = historicDetailOptionalStatus.map(x -> DarHistoryDto.builder()
                 .dataRequestStatus((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue())
                 .timeStamp((Date)((HistoricDetailVariableInstanceUpdateEntity)x).getTimestamp())
-                .dataActivityId((String)((HistoricDetailVariableInstanceUpdateEntity)x).getActivityInstanceId())
                 .build());
 
         historicDetailOptionalDateTime.map(x -> ((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue()))
