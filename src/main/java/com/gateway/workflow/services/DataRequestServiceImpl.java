@@ -112,12 +112,12 @@ public class DataRequestServiceImpl implements DataRequestService {
     }
 
     private String getHistoricProcessTask(String businessKey){
-        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(businessKey).singleResult();
+        List<HistoricProcessInstance> historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(businessKey).list();
 
         if(historicProcessInstance == null) {
             return "";
         }
 
-        return historicProcessInstance.getRootProcessInstanceId();
+        return historicProcessInstance.get(0).getRootProcessInstanceId();
     }
 }
