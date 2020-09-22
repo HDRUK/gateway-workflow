@@ -1,19 +1,25 @@
 package com.gateway.workflow.services;
 
+import com.gateway.workflow.dtos.DarHistoryAggDto;
 import com.gateway.workflow.dtos.DarHistoryDto;
 import javassist.NotFoundException;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.history.HistoricDetail;
-import org.camunda.bpm.engine.history.HistoricDetailQuery;
+import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.impl.persistence.entity.HistoricDetailVariableInstanceUpdateEntity;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.gateway.workflow.util.ConstantPropertiesUtil.*;
 
 @Service
 public class DataRequestServiceImpl implements DataRequestService {
@@ -28,27 +34,90 @@ public class DataRequestServiceImpl implements DataRequestService {
     private HistoryService historyService;
 
     @Override
-    public DarHistoryDto getDarRequestHistory(String businessKey, DarHistoryDto darHistoryDto) throws NotFoundException {
-        String processId = getProcessTask(businessKey).getProcessInstanceId();
-        HistoricDetailQuery hdq = historyService.createHistoricDetailQuery().processInstanceId(processId).variableUpdates();
+    public DarHistoryAggDto getDarRequestHistory(String businessKey) throws NotFoundException {
+        String historicProcessId = getHistoricProcessTask(businessKey);
+        String activeProcessId = getProcessTask(businessKey);
 
-        return new DarHistoryDto();
-    }
-
-    private DarHistoryDto getProcessHistory(String processId) {
-        Optional<HistoricDetail> historicDetail = historyService.createHistoricDetailQuery()
-                .processInstanceId(processId).orderByTime().asc().variableUpdates().list().stream()
-                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(""))
-                .reduce((first, second) -> second);
-
-        return new DarHistoryDto();
-    }
-
-    private Task getProcessTask(String businessKey) throws NotFoundException {
-        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(businessKey).orderByTaskCreateTime().asc().list();
-        if (tasks.isEmpty() || tasks.size() == 0) {
+        if (historicProcessId.isEmpty() && activeProcessId.isEmpty()) {
             throw new NotFoundException(String.format("No task could be found with businessKey %s", businessKey));
         }
-        return tasks.get(0);
+
+        String process = activeProcessId.isEmpty() ? historicProcessId : activeProcessId;
+        List<String> hdq = historyService.createHistoricDetailQuery()
+                .processInstanceId(process)
+                .list()
+                .stream().map(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getActivityInstanceId()).distinct().collect(Collectors.toList());
+
+        List<DarHistoryDto> darHistoryDtoList = new ArrayList<>();
+        List<Date> timeStamp = new ArrayList<>();
+        for (String actInstId: hdq) {
+            DarHistoryDto temp = getProcessHistory(actInstId);
+            timeStamp.add(temp.getDataTimeStamp());
+            darHistoryDtoList.add(temp);
+        }
+
+        return DarHistoryAggDto.builder()
+                .darHistoryList(darHistoryDtoList)
+                .dataRequestId(businessKey)
+                .timeInStatus(timeStamp.get(1).getTime() - timeStamp.get(0).getTime())
+                .build();
+    }
+
+    private DarHistoryDto getProcessHistory(String actInstId) {
+        Optional<HistoricDetail> historicDetailOptionalStatus = historyService.createHistoricDetailQuery()
+                .activityInstanceId(actInstId).orderByTime().asc().variableUpdates().list().stream()
+                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(DATA_REQUEST_STATUS))
+                .reduce((first, second) -> second);
+
+        Optional<HistoricDetail> historicDetailOptionalDateTime = historyService.createHistoricDetailQuery()
+                .activityInstanceId(actInstId).orderByTime().asc().variableUpdates().list().stream()
+                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(DATA_REQUEST_DATETIME))
+                .reduce((first, second) -> second);
+
+        Optional<HistoricDetail> historicDetailOptionalPublisher = historyService.createHistoricDetailQuery()
+                .activityInstanceId(actInstId).orderByTime().asc().variableUpdates().list().stream()
+                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(DATA_REQUEST_PUBLISHER))
+                .reduce((first, second) -> second);
+
+        Optional<HistoricDetail> historicDetailOptionalArchived = historyService.createHistoricDetailQuery()
+                .activityInstanceId(actInstId).orderByTime().asc().variableUpdates().list().stream()
+                .filter(x -> ((HistoricDetailVariableInstanceUpdateEntity)x).getName().equals(DATA_REQUEST_ARCHIVED))
+                .reduce((first, second) -> second);
+
+        Optional<DarHistoryDto> darHistoryDtoOptional = historicDetailOptionalStatus.map(x -> DarHistoryDto.builder()
+                .dataRequestStatus((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue())
+                .dataTimeStamp((Date)((HistoricDetailVariableInstanceUpdateEntity)x).getTimestamp())
+                .build());
+
+        historicDetailOptionalDateTime.map(x -> ((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue()))
+                .ifPresent(meta ->  darHistoryDtoOptional.get().setDataRequestDateTime(meta));
+
+        historicDetailOptionalPublisher.map(x -> ((String)((HistoricDetailVariableInstanceUpdateEntity) x).getValue()))
+                .ifPresent(meta ->  darHistoryDtoOptional.get().setDataRequestPublisher(meta));
+
+        historicDetailOptionalArchived.map(x -> ((Boolean)((HistoricDetailVariableInstanceUpdateEntity) x).getValue()))
+                .ifPresent(meta ->  darHistoryDtoOptional.get().setDataRequestArchived(meta));
+
+        return  darHistoryDtoOptional.orElse(DarHistoryDto.builder().build());
+    }
+
+    private String getProcessTask(String businessKey) {
+        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(businessKey).orderByTaskCreateTime().asc().list();
+
+        if(tasks.size() == 0) {
+           return "";
+        }
+
+        return tasks.get(0).getProcessInstanceId();
+    }
+
+    private String getHistoricProcessTask(String businessKey){
+        List<HistoricProcessInstance> historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(businessKey).list();
+
+        if(historicProcessInstance == null) {
+            return "";
+        }
+
+        return historicProcessInstance.get(0).getRootProcessInstanceId();
     }
 }
