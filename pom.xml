@@ -141,9 +141,9 @@
       </activation>
     </profile>
     <profile>
-      <id>gateway-live</id>
+      <id>uatbeta</id>
       <properties>
-        <activatedProperties>gateway-live</activatedProperties>
+        <activatedProperties>uatbeta</activatedProperties>
       </properties>
     </profile>
   </profiles>
