@@ -9,7 +9,7 @@ public class ProfileCondition extends AnyNestedCondition {
         super(ConfigurationPhase.PARSE_CONFIGURATION);
     }
 
-    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "uatbeta")
-    static class OnUatBeta {
+    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "deployed-profile")
+    static class OnDeployedProfile {
     }
 }
