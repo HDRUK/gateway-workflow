@@ -1,11 +1,14 @@
 package com.gateway.workflow.controllers;
 
 import com.gateway.workflow.dtos.DarHistoryAggDto;
+import com.gateway.workflow.dtos.DarStepReviewDto;
 import com.gateway.workflow.services.DataRequestService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
+import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -25,5 +28,11 @@ public class DataRequestController extends BaseController {
     @ResponseStatus(OK)
     public DarHistoryAggDto darRequestHistory(@PathVariable("businessKey") String businessKey) throws NotFoundException {
         return dataRequestService.getDarRequestHistory(businessKey);
+    }
+
+    @PostMapping(value = "/complete/review/{businessKey}")
+    @ResponseStatus(OK)
+    public DarStepReviewDto darStepReview(@PathVariable("businessKey") String businessKey, @Valid @RequestBody DarStepReviewDto darStepReviewDto) throws NotFoundException {
+        return dataRequestService.completeManagerStepAndCreateStepDefinition(businessKey, darStepReviewDto);
     }
 }
