@@ -9,7 +9,7 @@ public class ProfileCondition extends AnyNestedCondition {
         super(ConfigurationPhase.PARSE_CONFIGURATION);
     }
 
-    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "hdruk-live")
-    static class OnLive {
+    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "deployed-profile")
+    static class OnDeployedProfile {
     }
 }
