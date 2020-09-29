@@ -38,20 +38,37 @@ public class DataRequestServiceImpl implements DataRequestService {
 
     @Override
     public DarStepReviewDto completeManagerStepAndCreateStepDefinition(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException {
-        String process = getProcessId(businessKey);
         Task task = getTask(businessKey);
 
-        List<String> reviewers = new ArrayList<>();
-        reviewers.add("Test1");
-        reviewers.add("Test2");
-
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put("reviewerList", reviewers);
+        processVars.put("reviewerList", darStepReviewDto.getReviewerList());
+        processVars.put("applicationStatus", darStepReviewDto.getApplicationStatus());
+        processVars.put("dateSubmitted", darStepReviewDto.getDateSubmitted());
+        processVars.put("userId", darStepReviewDto.getUserId());
+        processVars.put("archived", darStepReviewDto.getArchived());
+        processVars.put("publisher", darStepReviewDto.getPublisher());
         processVars.put("notifyReviewer", darStepReviewDto.getNotifyReviewer());
 
-        processEngine.getTaskService().complete(task.getId(), processVars);
+        taskService.complete(task.getId(), processVars);
 
-        return DarStepReviewDto.builder().build();
+        return darStepReviewDto;
+    }
+
+    @Override
+    public Boolean completeUserTask(String businessKey, String userId) throws NotFoundException {
+        Task userTask = getUserTasks(businessKey).stream()
+                .filter(x -> userId.equals(x.getAssignee()))
+                .findFirst()
+                .orElse(null);
+
+        if(userTask == null) {
+            throw new NotFoundException(String.format("No assignee was found matching %s", userId));
+        }
+
+        Map<String, Object> processVars = new HashMap<>();
+        taskService.complete(userTask.getId(), processVars);
+
+        return false;
     }
 
     @Override
@@ -66,14 +83,17 @@ public class DataRequestServiceImpl implements DataRequestService {
         List<Date> timeStamp = new ArrayList<>();
         for (String actInstId: hdq) {
             DarHistoryDto temp = getProcessHistory(actInstId);
-            timeStamp.add(temp.getDataTimeStamp());
-            darHistoryDtoList.add(temp);
+
+            if(temp != null) {
+                timeStamp.add(temp.getDataTimeStamp());
+                darHistoryDtoList.add(temp);
+            }
         }
 
         return DarHistoryAggDto.builder()
                 .darHistoryList(darHistoryDtoList)
                 .dataRequestId(businessKey)
-                .timeInStatus(timeStamp.get(1).getTime() - timeStamp.get(0).getTime())
+                .timeInStatus(timeStamp.size() > 1 ? timeStamp.get(1).getTime() - timeStamp.get(0).getTime() : 0)
                 .build();
     }
 
@@ -112,15 +132,23 @@ public class DataRequestServiceImpl implements DataRequestService {
         historicDetailOptionalArchived.map(x -> ((Boolean)((HistoricDetailVariableInstanceUpdateEntity) x).getValue()))
                 .ifPresent(meta ->  darHistoryDtoOptional.get().setDataRequestArchived(meta));
 
-        return  darHistoryDtoOptional.orElse(DarHistoryDto.builder().build());
+        return  darHistoryDtoOptional.orElse(null);
     }
 
-    private Task getTask(String ticketId) throws NotFoundException {
-        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(ticketId).list();
+    private Task getTask(String businessKey) throws NotFoundException {
+        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(businessKey).list();
         if (tasks == null || tasks.size() == 0) {
-            throw new NotFoundException(String.format("No task with ticketId %s exists!", ticketId));
+            throw new NotFoundException(String.format("No task with businessKey %s exists!", businessKey));
         }
         return tasks.get(0);
+    }
+
+    private List<Task> getUserTasks(String businessKey) throws NotFoundException {
+        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(businessKey).list();
+        if (tasks == null || tasks.size() == 0) {
+            throw new NotFoundException(String.format("No task with businessKey %s exists!", businessKey));
+        }
+        return tasks;
     }
 
     private String getProcessId(String businessKey) throws NotFoundException {

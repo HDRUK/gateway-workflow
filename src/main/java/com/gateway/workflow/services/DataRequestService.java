@@ -8,5 +8,7 @@ public interface DataRequestService {
 
     DarStepReviewDto completeManagerStepAndCreateStepDefinition(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException;
 
+    Boolean completeUserTask(String businessKey, String userId) throws NotFoundException;
+
     DarHistoryAggDto getDarRequestHistory(String businessKey) throws NotFoundException;
 }
