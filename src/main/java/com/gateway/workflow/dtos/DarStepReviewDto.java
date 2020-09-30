@@ -12,13 +12,11 @@ import java.util.List;
 @ToString
 public class DarStepReviewDto {
 
-    private String dataRequestId;
     private String applicationStatus;
-    private String dateSubmitted;
-    private String userId;
-    private Boolean archived;
     private String publisher;
+    private String stepName;
     private String notifyReviewer;
+    private Boolean finalStep;
     private List<String> reviewerList;
 
 }

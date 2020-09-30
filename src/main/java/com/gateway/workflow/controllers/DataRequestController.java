@@ -31,7 +31,7 @@ public class DataRequestController extends BaseController {
         return dataRequestService.getDarRequestHistory(businessKey);
     }
 
-    @PostMapping(value = "/complete/review/manager/{businessKey}")
+    @PostMapping(value = "/manager/complete/{businessKey}")
     @ResponseStatus(OK)
     public ManagerApprovedDto darManagerApproval(@PathVariable("businessKey") String businessKey, @Valid @RequestBody ManagerApprovedDto managerApprovedDto) throws NotFoundException {
         return dataRequestService.managerCompleted(businessKey, managerApprovedDto);

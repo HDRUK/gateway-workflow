@@ -1,6 +1,5 @@
 package com.gateway.workflow.dtos;
 
-
 import lombok.*;
 
 @Getter
@@ -14,6 +13,10 @@ public class ManagerApprovedDto {
     private String dataRequestStatus;
     private String dataRequestManagerId;
     private String dataRequestPublisher;
-    private String dataRequestId;
-    private Boolean managerApproved;
+    @Builder.Default
+    private Boolean managerApproved = false;
+    @Builder.Default
+    private Boolean phaseApproved = false;
+    @Builder.Default
+    private Boolean finalPhaseApproved = false;
 }

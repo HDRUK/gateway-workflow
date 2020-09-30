@@ -36,19 +36,17 @@ public class DataRequestServiceImpl implements DataRequestService {
     @Autowired
     private HistoryService historyService;
 
-
     @Override
     public DarStepReviewDto completeManagerStepAndCreateStepDefinition(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException {
         Task task = getTask(businessKey);
 
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put("reviewerList", darStepReviewDto.getReviewerList());
         processVars.put("applicationStatus", darStepReviewDto.getApplicationStatus());
-        processVars.put("dateSubmitted", darStepReviewDto.getDateSubmitted());
-        processVars.put("userId", darStepReviewDto.getUserId());
-        processVars.put("archived", darStepReviewDto.getArchived());
         processVars.put("publisher", darStepReviewDto.getPublisher());
+        processVars.put("stepName", darStepReviewDto.getStepName());
         processVars.put("notifyReviewer", darStepReviewDto.getNotifyReviewer());
+        processVars.put("finalStep", darStepReviewDto.getFinalStep());
+        processVars.put("reviewerList", darStepReviewDto.getReviewerList());
 
         taskService.complete(task.getId(), processVars);
 
@@ -64,6 +62,8 @@ public class DataRequestServiceImpl implements DataRequestService {
         processVars.put("managerId", managerApprovedDto.getDataRequestManagerId());
         processVars.put("publisher", managerApprovedDto.getDataRequestPublisher());
         processVars.put("managerApproved", managerApprovedDto.getManagerApproved());
+        processVars.put("phaseApproved", managerApprovedDto.getPhaseApproved());
+        processVars.put("finalPhaseApproved", managerApprovedDto.getFinalPhaseApproved());
 
         taskService.delegateTask(task.getId(), managerApprovedDto.getDataRequestManagerId());
         taskService.complete(task.getId(), processVars);
