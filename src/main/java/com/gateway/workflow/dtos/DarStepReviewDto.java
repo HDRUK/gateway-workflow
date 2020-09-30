@@ -12,11 +12,16 @@ import java.util.List;
 @ToString
 public class DarStepReviewDto {
 
-    private String applicationStatus;
-    private String publisher;
-    private String stepName;
-    private String notifyReviewer;
-    private Boolean finalStep;
+    private String dataRequestStatus;
+    private String dataRequestUserId;
+    private String dataRequestPublisher;
+    private String dataRequestStepName;
+    private String notifyReviewerSLA;
+    @Builder.Default
+    private Boolean managerApproved = false;
+    @Builder.Default
+    private Boolean phaseApproved = false;
+    @Builder.Default
+    private Boolean finalPhaseApproved = false;
     private List<String> reviewerList;
-
 }

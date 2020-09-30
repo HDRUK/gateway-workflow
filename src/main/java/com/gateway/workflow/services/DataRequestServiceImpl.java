@@ -12,6 +12,8 @@ import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.history.HistoricDetail;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.impl.persistence.entity.HistoricDetailVariableInstanceUpdateEntity;
+import org.camunda.bpm.engine.runtime.MessageCorrelationBuilder;
+import org.camunda.bpm.engine.runtime.MessageCorrelationResult;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,11 +43,13 @@ public class DataRequestServiceImpl implements DataRequestService {
         Task task = getTask(businessKey);
 
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put("applicationStatus", darStepReviewDto.getApplicationStatus());
-        processVars.put("publisher", darStepReviewDto.getPublisher());
-        processVars.put("stepName", darStepReviewDto.getStepName());
-        processVars.put("notifyReviewer", darStepReviewDto.getNotifyReviewer());
-        processVars.put("finalStep", darStepReviewDto.getFinalStep());
+        processVars.put("applicationStatus", darStepReviewDto.getDataRequestStatus());
+        processVars.put("publisher", darStepReviewDto.getDataRequestPublisher());
+        processVars.put("stepName", darStepReviewDto.getDataRequestStepName());
+        processVars.put("notifyReviewer", darStepReviewDto.getNotifyReviewerSLA());
+        processVars.put("managerApproved", darStepReviewDto.getManagerApproved());
+        processVars.put("phaseApproved", darStepReviewDto.getPhaseApproved());
+        processVars.put("finalPhaseApproved", darStepReviewDto.getFinalPhaseApproved());
         processVars.put("reviewerList", darStepReviewDto.getReviewerList());
 
         taskService.complete(task.getId(), processVars);
@@ -54,7 +58,7 @@ public class DataRequestServiceImpl implements DataRequestService {
     }
 
     @Override
-    public ManagerApprovedDto managerCompleted(String businessKey, ManagerApprovedDto managerApprovedDto) throws NotFoundException {
+    public ManagerApprovedDto managerCompletedReview(String businessKey, ManagerApprovedDto managerApprovedDto) throws NotFoundException {
         Task task = getTask(businessKey);
 
         Map<String, Object> processVars = new HashMap<>();
@@ -72,20 +76,31 @@ public class DataRequestServiceImpl implements DataRequestService {
     }
 
     @Override
-    public Boolean completeUserTask(String businessKey, String userId) throws NotFoundException {
+    public DarStepReviewDto completeReviewerStep(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException {
         Task userTask = getUserTasks(businessKey).stream()
-                .filter(x -> userId.equals(x.getAssignee()))
+                .filter(x -> darStepReviewDto.getDataRequestUserId().equals(x.getAssignee()))
                 .findFirst()
                 .orElse(null);
 
         if(userTask == null) {
-            throw new NotFoundException(String.format("No assignee was found matching %s", userId));
+            throw new NotFoundException(String.format("No assignee was found matching %s", darStepReviewDto.getDataRequestUserId()));
         }
 
-        Map<String, Object> processVars = new HashMap<>();
-        taskService.complete(userTask.getId(), processVars);
+        if(!darStepReviewDto.getPhaseApproved()) {
+            Map<String, Object> processVars = new HashMap<>();
+            processVars.put("userId", darStepReviewDto.getDataRequestUserId());
+            processVars.put("managerApproved", darStepReviewDto.getManagerApproved());
+            processVars.put("phaseApproved", darStepReviewDto.getPhaseApproved());
+            processVars.put("finalPhaseApproved", darStepReviewDto.getFinalPhaseApproved());
 
-        return false;
+            taskService.complete(userTask.getId(), processVars);
+        }
+
+        if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList().size() > 0) {
+            createNextStepDefinition(businessKey, darStepReviewDto);
+        }
+
+        return darStepReviewDto;
     }
 
     @Override
@@ -197,5 +212,19 @@ public class DataRequestServiceImpl implements DataRequestService {
         }
 
         return historicProcessInstance.get(0).getRootProcessInstanceId();
+    }
+
+    private MessageCorrelationResult createNextStepDefinition(String businessKey, DarStepReviewDto darStepReviewDto) {
+        return runtimeService.createMessageCorrelation(UPDATE_STEP)
+                .processInstanceBusinessKey(businessKey)
+                .setVariable("userId", darStepReviewDto.getDataRequestUserId())
+                .setVariable("publisher", darStepReviewDto.getDataRequestPublisher())
+                .setVariable("stepName", darStepReviewDto.getDataRequestStepName())
+                .setVariable("notifyReviewerSLA", darStepReviewDto.getNotifyReviewerSLA())
+                .setVariable("managerApproved", darStepReviewDto.getManagerApproved())
+                .setVariable("phaseApproved", darStepReviewDto.getPhaseApproved())
+                .setVariable("finalPhaseApproved", darStepReviewDto.getFinalPhaseApproved())
+                .setVariable("reviewerList", darStepReviewDto.getReviewerList())
+                .correlateWithResult();
     }
 }
