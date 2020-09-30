@@ -1,8 +1,7 @@
 package com.gateway.workflow.dtos;
 
-import lombok.*;
 
-import java.util.Date;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
@@ -10,11 +9,11 @@ import java.util.Date;
 @Builder
 @Setter
 @ToString
-public class DarHistoryDto {
+public class ManagerApprovedDto {
 
     private String dataRequestStatus;
-    private String dataRequestDateTime;
+    private String dataRequestManagerId;
     private String dataRequestPublisher;
-    private Boolean dataRequestArchived;
-    private Date dataTimeStamp;
+    private String dataRequestId;
+    private Boolean managerApproved;
 }

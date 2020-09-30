@@ -3,6 +3,7 @@ package com.gateway.workflow.services;
 import com.gateway.workflow.dtos.DarHistoryAggDto;
 import com.gateway.workflow.dtos.DarHistoryDto;
 import com.gateway.workflow.dtos.DarStepReviewDto;
+import com.gateway.workflow.dtos.ManagerApprovedDto;
 import javassist.NotFoundException;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ProcessEngine;
@@ -52,6 +53,22 @@ public class DataRequestServiceImpl implements DataRequestService {
         taskService.complete(task.getId(), processVars);
 
         return darStepReviewDto;
+    }
+
+    @Override
+    public ManagerApprovedDto managerCompleted(String businessKey, ManagerApprovedDto managerApprovedDto) throws NotFoundException {
+        Task task = getTask(businessKey);
+
+        Map<String, Object> processVars = new HashMap<>();
+        processVars.put("applicationStatus", managerApprovedDto.getDataRequestStatus());
+        processVars.put("managerId", managerApprovedDto.getDataRequestManagerId());
+        processVars.put("publisher", managerApprovedDto.getDataRequestPublisher());
+        processVars.put("managerApproved", managerApprovedDto.getManagerApproved());
+
+        taskService.delegateTask(task.getId(), managerApprovedDto.getDataRequestManagerId());
+        taskService.complete(task.getId(), processVars);
+
+        return managerApprovedDto;
     }
 
     @Override
