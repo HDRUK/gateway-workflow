@@ -31,15 +31,21 @@ public class DataRequestController extends BaseController {
         return dataRequestService.getDarRequestHistory(businessKey);
     }
 
-    @PostMapping(value = "/manager/complete/{businessKey}")
-    @ResponseStatus(OK)
-    public ManagerApprovedDto darManagerApproval(@PathVariable("businessKey") String businessKey, @Valid @RequestBody ManagerApprovedDto managerApprovedDto) throws NotFoundException {
-        return dataRequestService.managerCompleted(businessKey, managerApprovedDto);
-    }
-
     @PostMapping(value = "/complete/review/{businessKey}")
     @ResponseStatus(OK)
-    public DarStepReviewDto darStepReview(@PathVariable("businessKey") String businessKey, @Valid @RequestBody DarStepReviewDto darStepReviewDto) throws NotFoundException {
+    public DarStepReviewDto darStartStepReview(@PathVariable("businessKey") String businessKey, @Valid @RequestBody DarStepReviewDto darStepReviewDto) throws NotFoundException {
         return dataRequestService.completeManagerStepAndCreateStepDefinition(businessKey, darStepReviewDto);
+    }
+
+    @PostMapping(value = "/reviewer/complete/{businessKey}")
+    @ResponseStatus(OK)
+    public DarStepReviewDto darReviewerStep(@PathVariable("businessKey") String businessKey, @Valid @RequestBody DarStepReviewDto darStepReviewDto) throws NotFoundException {
+        return dataRequestService.completeReviewerStep(businessKey, darStepReviewDto);
+    }
+
+    @PostMapping(value = "/manager/completed/{businessKey}")
+    @ResponseStatus(OK)
+    public ManagerApprovedDto darManagerApproval(@PathVariable("businessKey") String businessKey, @Valid @RequestBody ManagerApprovedDto managerApprovedDto) throws NotFoundException {
+        return dataRequestService.managerCompletedReview(businessKey, managerApprovedDto);
     }
 }
