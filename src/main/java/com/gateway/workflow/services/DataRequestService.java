@@ -9,9 +9,9 @@ public interface DataRequestService {
 
     DarStepReviewDto completeManagerStepAndCreateStepDefinition(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException;
 
-    ManagerApprovedDto managerCompleted(String businessKey, ManagerApprovedDto managerApprovedDto) throws NotFoundException;
+    ManagerApprovedDto managerCompletedReview(String businessKey, ManagerApprovedDto managerApprovedDto) throws NotFoundException;
 
-    Boolean completeUserTask(String businessKey, String userId) throws NotFoundException;
+    DarStepReviewDto completeReviewerStep(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException;
 
     DarHistoryAggDto getDarRequestHistory(String businessKey) throws NotFoundException;
 }
