@@ -82,10 +82,16 @@ public class DataRequestServiceImpl implements DataRequestService {
                 .findFirst()
                 .orElse(null);
 
-        if(userTask == null) {
+        if(userTask == null && !darStepReviewDto.getPhaseApproved() && !darStepReviewDto.getManagerApproved()) {
             throw new NotFoundException(String.format("No assignee was found matching %s", darStepReviewDto.getDataRequestUserId()));
         }
 
+        if(darStepReviewDto.getManagerApproved() && (darStepReviewDto.getPhaseApproved() || darStepReviewDto.getFinalPhaseApproved())) {
+            Task delegateUserTask = getTask(businessKey);
+            taskService.delegateTask(delegateUserTask.getId(), darStepReviewDto.getDataRequestUserId());
+        }
+
+        //If not phase not approved
         if(!darStepReviewDto.getPhaseApproved()) {
             Map<String, Object> processVars = new HashMap<>();
             processVars.put("userId", darStepReviewDto.getDataRequestUserId());
@@ -102,6 +108,7 @@ public class DataRequestServiceImpl implements DataRequestService {
                             darStepReviewDto.getReviewerList(),
                             darStepReviewDto.getReviewerList().size()));
 
+        //If phase approved and reviewer is greater than zero
         if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList().size() > 0) {
             createNextStepDefinition(businessKey, darStepReviewDto);
         }
