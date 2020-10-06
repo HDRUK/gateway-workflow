@@ -86,7 +86,7 @@ public class DataRequestServiceImpl implements DataRequestService {
             throw new NotFoundException(String.format("No assignee was found matching %s", darStepReviewDto.getDataRequestUserId()));
         }
 
-        if(darStepReviewDto.getManagerApproved() && darStepReviewDto.getPhaseApproved()) {
+        if(darStepReviewDto.getManagerApproved() && (darStepReviewDto.getPhaseApproved() || darStepReviewDto.getFinalPhaseApproved())) {
             Task delegateUserTask = getTask(businessKey);
             taskService.delegateTask(delegateUserTask.getId(), darStepReviewDto.getDataRequestUserId());
         }
