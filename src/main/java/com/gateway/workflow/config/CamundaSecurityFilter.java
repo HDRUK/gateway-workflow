@@ -19,7 +19,6 @@ public class CamundaSecurityFilter {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("camunda-jwt-auth");
         registration.addInitParameter("authentication-provider", "io.digitalstate.camunda.authentication.jwt.AuthenticationFilterJwt");
-        //registration.addInitParameter("jwt-secret-path", jwtSecretPath);
         registration.addInitParameter("jwt-validator", ValidatorJwt.class.getName());
         registration.addUrlPatterns("/engine-rest/*");
         registration.addUrlPatterns("/api/*");
