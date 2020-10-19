@@ -56,9 +56,6 @@
     <bpmn:endEvent id="Event_1qfszfy">
       <bpmn:incoming>Flow_1vi2n6p</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="Event_17x8nfx">
-      <bpmn:incoming>Flow_1qite98</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_1ru5lmf" cancelActivity="false" attachedToRef="Activity_14qdhlu">
       <bpmn:outgoing>Flow_1qite98</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_160784z">
@@ -73,7 +70,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${managerApproved == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1gigpmj" sourceRef="Activity_1d126n6" targetRef="Event_02o2x40" />
-    <bpmn:sequenceFlow id="Flow_1qite98" sourceRef="Event_1ru5lmf" targetRef="Event_17x8nfx" />
+    <bpmn:sequenceFlow id="Flow_1qite98" sourceRef="Event_1ru5lmf" targetRef="Activity_15vqq2k" />
     <bpmn:boundaryEvent id="Event_0bwjr2l" attachedToRef="Activity_14qdhlu">
       <bpmn:outgoing>Flow_08gk75v</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1ufmtzh" messageRef="Message_1ntke8y" />
@@ -90,6 +87,14 @@
     <bpmn:serviceTask id="Activity_1yo5gs3" camunda:class="com.gateway.workflow.services.DARNotificationService">
       <bpmn:incoming>Flow_1lpdlt7</bpmn:incoming>
       <bpmn:outgoing>Flow_02ymxlf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_17x8nfx">
+      <bpmn:incoming>Flow_1skmsym</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1skmsym" sourceRef="Activity_15vqq2k" targetRef="Event_17x8nfx" />
+    <bpmn:serviceTask id="Activity_15vqq2k" camunda:class="com.gateway.workflow.services.DARNotificationService">
+      <bpmn:incoming>Flow_1qite98</bpmn:incoming>
+      <bpmn:outgoing>Flow_1skmsym</bpmn:outgoing>
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_1ntke8y" name="updateStep" />
@@ -111,8 +116,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1qite98_di" bpmnElement="Flow_1qite98">
         <di:waypoint x="1030" y="287" />
-        <di:waypoint x="1030" y="349" />
-        <di:waypoint x="1102" y="349" />
+        <di:waypoint x="1030" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1gigpmj_di" bpmnElement="Flow_1gigpmj">
         <di:waypoint x="1440" y="229" />
@@ -155,6 +159,10 @@
         <di:waypoint x="268" y="229" />
         <di:waypoint x="330" y="229" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1skmsym_di" bpmnElement="Flow_1skmsym">
+        <di:waypoint x="1030" y="420" />
+        <di:waypoint x="1030" y="472" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0kpwbtz_di" bpmnElement="Event_0kpwbtz">
         <dc:Bounds x="232" y="211" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -182,9 +190,6 @@
       <bpmndi:BPMNShape id="Event_1qfszfy_di" bpmnElement="Event_1qfszfy">
         <dc:Bounds x="1372" y="321" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_17x8nfx_di" bpmnElement="Event_17x8nfx">
-        <dc:Bounds x="1102" y="331" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1nbvitz_di" bpmnElement="Activity_1d126n6">
         <dc:Bounds x="1340" y="189" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -193,6 +198,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1cr6ry5_di" bpmnElement="Activity_1yo5gs3">
         <dc:Bounds x="520" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_17x8nfx_di" bpmnElement="Event_17x8nfx">
+        <dc:Bounds x="1012" y="472" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13gv8sv_di" bpmnElement="Activity_15vqq2k">
+        <dc:Bounds x="980" y="340" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0x5rqcb_di" bpmnElement="Event_0bwjr2l">
         <dc:Bounds x="1032" y="171" width="36" height="36" />

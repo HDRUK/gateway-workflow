@@ -7,25 +7,26 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.digitalstate.camunda.authentication.jwt.AbstractValidatorJwt;
 import io.digitalstate.camunda.authentication.jwt.ValidatorResultJwt;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.context.annotation.Configuration;
 
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
+import static com.gateway.workflow.util.GetJwtSecretUtil.getJWTSecret;
 
+@Configuration
 public class ValidatorJwt extends AbstractValidatorJwt {
-
     private static final Logger logger = LoggerFactory.getLogger(ValidatorJwt.class);
     private static String jwtSecret;
 
     @Override
     public ValidatorResultJwt validateJwt(String encodedCredentials, String jwtSecretPath) {
-        if(jwtSecret != null || !jwtSecret.equals("")) {
+        if(jwtSecretPath == null || jwtSecretPath.equals("")) {
             try {
-                jwtSecret = new String(Files.readAllBytes(new ClassPathResource(jwtSecretPath).getFile().toPath()));
+                jwtSecret = getJWTSecret();
             } catch (Exception e) {
                 logger.error(String.format("Error: %s", e.getMessage()));
                 return ValidatorResultJwt.setValidatorResult(false,null,null, null);
@@ -43,15 +44,15 @@ public class ValidatorJwt extends AbstractValidatorJwt {
             List<String> groupIds = jwt.getClaim("groupIds").asList(String.class);
             List<String> tenantIds = jwt.getClaim("tenantIds").asList(String.class);
 
-            if (!username.equals("")){
+            if (username.isEmpty()){
                 logger.error("BAD JWT: Missing username");
                 return ValidatorResultJwt.setValidatorResult(false, null, null, null);
             }
 
             return ValidatorResultJwt.setValidatorResult(true, username, groupIds, tenantIds);
 
-        } catch(JWTVerificationException exception){
-            logger.error("BAD JWT: ${exception.getLocalizedMessage()}");
+        } catch(JWTVerificationException exception) {
+            logger.error(String.format("BAD JWT: %s", exception.getMessage()));
             return ValidatorResultJwt.setValidatorResult(false, null, null, null);
         }
     }

@@ -18,11 +18,6 @@
             <param-value>io.digitalstate.camunda.authentication.jwt.AuthenticationFilterJwt</param-value>
         </init-param>
         <init-param>
-            <param-name>jwt-secret-path</param-name>
-            <!--Replace value with absolute path to file that stores the JWT secret-->
-            <param-value>/keys/rsa_key.pub</param-value>
-        </init-param>
-        <init-param>
             <param-name>jwt-validator</param-name>
             <!--Replace the value with your Class that extends AbstractValidatorJwt-->
             <param-value>com.gateway.workflow.config.ValidatorJwt</param-value>
@@ -31,6 +26,10 @@
     <filter-mapping>
         <filter-name>camunda-jwt-auth</filter-name>
         <url-pattern>/engine-rest/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>camunda-jwt-auth</filter-name>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
     <servlet>
