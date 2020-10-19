@@ -8,7 +8,7 @@ public class GetJwtSecretUtil {
 
     public static String getJWTSecret() throws IOException {
         String gcpProjectNumber = getEnvProp("PROJECT_NUMBER");
-        String gcpJwtId = getEnvProp("JWT_ID");
+        String gcpJwtId = getEnvProp("JWT_SECRET_ID");
         String gcpSecretVersion = getEnvProp("SECRET_VERSION");
 
         String secret = "";
