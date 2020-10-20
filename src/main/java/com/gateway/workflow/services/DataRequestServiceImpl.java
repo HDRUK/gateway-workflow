@@ -104,7 +104,7 @@ public class DataRequestServiceImpl implements DataRequestService {
             taskService.complete(userTask.getId(), processVars);
         }
 
-        if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList().size() <= 0)
+        if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList().size() <= 0 && !darStepReviewDto.getFinalPhaseApproved())
             throw new IllegalArgumentException(
                     String.format("%s has %s records. Please sure reviewers are added before continuing",
                             darStepReviewDto.getReviewerList(),
