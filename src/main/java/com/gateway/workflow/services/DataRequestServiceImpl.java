@@ -94,7 +94,7 @@ public class DataRequestServiceImpl implements DataRequestService {
         }
 
         //If not phase not approved
-        if(!darStepReviewDto.getPhaseApproved()) {
+        if(!darStepReviewDto.getPhaseApproved() || (darStepReviewDto.getPhaseApproved() && darStepReviewDto.getFinalPhaseApproved())) {
             Map<String, Object> processVars = new HashMap<>();
             processVars.put("userId", darStepReviewDto.getDataRequestUserId());
             processVars.put("managerApproved", darStepReviewDto.getManagerApproved());
@@ -104,14 +104,13 @@ public class DataRequestServiceImpl implements DataRequestService {
             taskService.complete(userTask.getId(), processVars);
         }
 
-        if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList().size() <= 0 && !darStepReviewDto.getFinalPhaseApproved())
+        if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList() == null && !darStepReviewDto.getFinalPhaseApproved())
             throw new IllegalArgumentException(
-                    String.format("%s has %s records. Please sure reviewers are added before continuing",
-                            darStepReviewDto.getReviewerList(),
-                            darStepReviewDto.getReviewerList().size()));
+                    String.format("%s has no records. Please sure reviewers are added before continuing",
+                            darStepReviewDto.getReviewerList()));
 
         //If phase approved and reviewer is greater than zero
-        if(darStepReviewDto.getPhaseApproved() && darStepReviewDto.getReviewerList().size() > 0) {
+        if(darStepReviewDto.getPhaseApproved() && !darStepReviewDto.getFinalPhaseApproved()) {
             createNextStepDefinition(businessKey, darStepReviewDto);
         }
 
