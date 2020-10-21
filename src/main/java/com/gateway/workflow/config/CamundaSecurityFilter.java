@@ -21,7 +21,7 @@ public class CamundaSecurityFilter {
         registration.addInitParameter("authentication-provider", "io.digitalstate.camunda.authentication.jwt.AuthenticationFilterJwt");
         registration.addInitParameter("jwt-validator", ValidatorJwt.class.getName());
         registration.addUrlPatterns("/engine-rest/*");
-        registration.addUrlPatterns("/api/*");
+        registration.addUrlPatterns("/api/gateway/*");
         registration.setFilter(getProcessEngineAuthenticationFilter());
         return registration;
     }

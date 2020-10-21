@@ -29,7 +29,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>camunda-jwt-auth</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/api/gateway/*</url-pattern>
     </filter-mapping>
 
     <servlet>
