@@ -10,6 +10,8 @@ import org.springframework.web.reactive.function.client.WebClientException;
 
 import java.util.logging.Logger;
 
+import static com.gateway.workflow.util.GenerateJwtUtil.generateGatewayJWT;
+
 @Configuration
 public class DARNotificationService implements JavaDelegate {
 
@@ -19,18 +21,20 @@ public class DARNotificationService implements JavaDelegate {
     private Environment environment;
 
     public void execute(DelegateExecution delegateExecution) throws Exception {
-            sendNotification(delegateExecution.getProcessBusinessKey()).exchange()
-                    .doOnSuccess(args -> LOGGER.info("Success: " + args.statusCode().toString()))
-                    .doOnError(e -> LOGGER.info("Error: " + e.getStackTrace().toString()));
+        sendNotification(delegateExecution.getProcessBusinessKey()).exchange().block().bodyToMono(String.class).block();
     }
 
     private WebClient.RequestBodySpec sendNotification(String dataRequestId) throws WebClientException {
         String gateway = environment.getProperty("gateway-api.url");
+        String systemUser = environment.getProperty("jwt.system-user");
+        String token = generateGatewayJWT(systemUser);
+
         WebClient webClient = WebClient.create(gateway);
         WebClient.RequestBodySpec client = webClient
                 .post()
-                .uri("/slaNotification/" + dataRequestId)
-                .header("Access-Control-Allow-Origin", "*");
+                .uri("/api/v1/slaNotification/" + dataRequestId)
+                .header("Access-Control-Allow-Origin", "*")
+                .cookie("jwt", token);
         return client;
     }
 }
