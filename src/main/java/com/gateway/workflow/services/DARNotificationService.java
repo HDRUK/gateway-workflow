@@ -32,7 +32,7 @@ public class DARNotificationService implements JavaDelegate {
         WebClient webClient = WebClient.create(gateway);
         WebClient.RequestBodySpec client = webClient
                 .post()
-                .uri("/api/v1/slaNotification/" + dataRequestId)
+                .uri("api/v1/data-access-request/" + dataRequestId + "/notify")
                 .header("Access-Control-Allow-Origin", "*")
                 .cookie("jwt", token);
         return client;
