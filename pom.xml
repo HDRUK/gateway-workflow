@@ -27,6 +27,14 @@
   <packaging>war</packaging>
   <name>gateway-workflow</name>
 
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
+
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -76,13 +84,13 @@
       <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-hateoas</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.projectreactor</groupId>
       <artifactId>reactor-spring</artifactId>
       <version>1.0.1.RELEASE</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-hateoas</artifactId>
     </dependency>
     <dependency>
       <groupId>org.camunda.spin</groupId>
@@ -118,6 +126,29 @@
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-secretmanager</artifactId>
       <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.digitalstate</groupId>
+      <artifactId>camunda-rest-jwt-authentication</artifactId>
+      <version>v0.5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>0.11.2</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-impl</artifactId>
+      <version>0.11.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId>
+      <version>0.11.2</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
