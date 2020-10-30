@@ -1,9 +1,6 @@
 package com.gateway.workflow.services;
 
-import com.gateway.workflow.dtos.DarHistoryAggDto;
-import com.gateway.workflow.dtos.DarHistoryDto;
-import com.gateway.workflow.dtos.DarStepReviewDto;
-import com.gateway.workflow.dtos.ManagerApprovedDto;
+import com.gateway.workflow.dtos.*;
 import javassist.NotFoundException;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ProcessEngine;
@@ -114,6 +111,43 @@ public class DataRequestServiceImpl implements DataRequestService {
         }
 
         return darStepReviewDto;
+    }
+
+    @Override
+    public DarDelegateTasksDto managerDelegateTask(String businessKey, String reviewerId, String managerId) throws NotFoundException {
+        // Get a list of filtered user tasks on the businessKey (DarId) and reviewerId.
+        // reviewerId - is the user ID you want to delegate from
+        // managerId - is the user ID you want to delegate to
+        List<Task> userTasks = getUserTasks(businessKey).stream()
+                .filter(x -> reviewerId.equals(x.getAssignee()))
+                .collect(Collectors.toList());
+
+        // If userTasks is null or has a size less than equal to 0
+        // then throw a friendly message
+        if(userTasks == null  || userTasks.size() <= 0) {
+            throw new NotFoundException(String.format("No tasks could be found for assignee: %s for DAR: %s", reviewerId, businessKey));
+        }
+
+        //Create a new list to keep track of all user tasks delegated
+        List<String> delegateTasks = new ArrayList<>();
+
+        // Iterate over the users tasks and assignee them to the new user (managerId).
+        for (Task t : userTasks) {
+            delegateTasks.add(t.getName());
+            taskService.setAssignee(t.getId(), managerId);
+        }
+
+        // Return a new DTO with a list of;
+        //  Tasks that were updated
+        //  The new assigneeId
+        //  The previous assigneeId
+        //  The number of tasks modified
+        return DarDelegateTasksDto.builder()
+                .delegateTasks(delegateTasks)
+                .newAssignee(managerId)
+                .previousAssignee(reviewerId)
+                .taskCount(delegateTasks.size())
+                .build();
     }
 
     @Override
