@@ -12,6 +12,7 @@ public class SecretManagerUtil {
         throw new IllegalStateException("Secret Manager class");
     }
 
+    // Get secrets from GCP's secret manager
     public static String getSecret(String projectId, String secretId, String secretVersion) throws IOException {
         try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
             SecretVersionName secretVersionName = SecretVersionName.of(projectId, secretId, secretVersion);
