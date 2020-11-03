@@ -13,6 +13,7 @@ public class ApplicationPropertiesUtil {
     public static final String GCP_DATA_MIN_IDLE = "gcp.dataSourceMinimumIdle";
     public static final String GCP_DATA_MAX_POOL_SIZE = "gcp.dataSourceMaximumPoolSize";
     public static final String GCP_SECRET_ID= "gcp.secretId";
+    public static final String GCP_JWT_SECRET_ID= "gcp.jwtId";
     public static final String GCP_SECRET_VERSION = "gcp.secretVersion";
     public static final String GCP_PROJECT_NUMBER = "gcp.projectNumber";
 }
