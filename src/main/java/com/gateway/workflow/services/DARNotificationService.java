@@ -20,10 +20,22 @@ public class DARNotificationService implements JavaDelegate {
     @Autowired
     private Environment environment;
 
+    /**
+     * <p>This is executed by the camunda bpmn, once a timer completes a delegate execution is made.
+     * This triggers an api call back to the gateway to send out notifications about the breach of the SLA (Service Level Agreement).
+     * </p>
+     * @param delegateExecution Executes listeners
+     * @see <a href="https://docs.camunda.org/javadoc/camunda-bpm-platform/7.14/">Delegate Execution</a>
+     * */
     public void execute(DelegateExecution delegateExecution) throws Exception {
         sendNotification(delegateExecution.getProcessBusinessKey()).exchange().block().bodyToMono(String.class).block();
     }
 
+    /**
+     * <p>Makes the rest call the gateway to trigger the notifications being sent.</p>
+     * @param dataRequestId The DarId passed in from the execute method
+     * @return The webclient response
+     * */
     private WebClient.RequestBodySpec sendNotification(String dataRequestId) throws WebClientException {
         String gateway = environment.getProperty("gateway-api.url");
         String systemUser = environment.getProperty("jwt.system-user");

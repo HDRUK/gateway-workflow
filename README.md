@@ -124,8 +124,20 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DATA_SOURCE=postgresDb
-      - DATA_USER=test_user
-      - DATA_PASS=test_user_password
+      - DATA_USER=YOUR_USER_HERE
+      - DATA_PASS=YOUR_PASS_HERE
+      - GATEWAY_API=http://YourIPV4Address:3001/
+      - SECRET_JWT=JWT_HERE
+      - VALIDATOR_CLASS=com.gateway.workflow.util.ValidatorJwt
+      - SYSTEM_USER=SYSTEM_USER_OBJECTID
+```
+## Create Database initialization script
+Create a init.sql file and put it in the same directory as the compose file. 
+During the compose up the init.sql script will be used to create the databases.
+ 
+```sql
+CREATE DATABASE sonar;
+CREATE DATABASE gateway_workflow;
 ```
 
 ## Running the docker-compose script

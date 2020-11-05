@@ -24,6 +24,9 @@ public class ValidatorJwt extends AbstractValidatorJwt {
 
     @Override
     public ValidatorResultJwt validateJwt(String encodedCredentials, String jwtSecretPath) {
+        // Check if the jwtSecretPath is null or empty string.
+        // If it is null get the JWTSecret from the 'getJWTSecret' method
+        // Otherwise throw an exception
         if(jwtSecretPath == null || jwtSecretPath.equals("")) {
             try {
                 jwtSecret = getJWTSecret();
@@ -33,6 +36,7 @@ public class ValidatorJwt extends AbstractValidatorJwt {
             }
         }
 
+        // Try to verify the jwt, if the jwt is invalid throw an error
         try {
             Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
             JWTVerifier verifier = JWT.require(algorithm)
