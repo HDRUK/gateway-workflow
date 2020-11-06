@@ -135,6 +135,15 @@ public class DataRequestServiceImpl implements DataRequestService {
         for (Task t : userTasks) {
             delegateTasks.add(t.getName());
             taskService.setAssignee(t.getId(), managerId);
+
+            // Uncomment the below if you wish to complete the task after delegation
+            /**
+             * Map<String, Object> processVars = new HashMap<>();
+             * processVars.put("managerApproved", true);
+             * taskService.delegateTask(t.getId(), managerId);
+             * taskService.complete(t.getId(), processVars);
+             * */
+
         }
 
         // Return a new DTO with a list of;
