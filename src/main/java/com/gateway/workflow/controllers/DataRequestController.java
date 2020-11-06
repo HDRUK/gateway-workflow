@@ -1,5 +1,6 @@
 package com.gateway.workflow.controllers;
 
+import com.gateway.workflow.dtos.DarDelegateTasksDto;
 import com.gateway.workflow.dtos.DarHistoryAggDto;
 import com.gateway.workflow.dtos.DarStepReviewDto;
 import com.gateway.workflow.dtos.ManagerApprovedDto;
@@ -36,9 +37,17 @@ public class DataRequestController extends BaseController {
         return dataRequestService.completeReviewerStep(businessKey, darStepReviewDto);
     }
 
-    @PostMapping(value = "/manager/completed/{businessKey}")
+    @PostMapping(value = "/manager/complete/{businessKey}")
     @ResponseStatus(OK)
     public ManagerApprovedDto darManagerApproval(@PathVariable("businessKey") String businessKey, @Valid @RequestBody ManagerApprovedDto managerApprovedDto) throws NotFoundException {
         return dataRequestService.managerCompletedReview(businessKey, managerApprovedDto);
+    }
+
+    @PutMapping(value = "/manager/delegate/task/{businessKey}")
+    @ResponseStatus(OK)
+    public DarDelegateTasksDto managerDelegateTask(@PathVariable("businessKey") String businessKey,
+                                                   @RequestParam(value = "reviewerId") String reviewerId,
+                                                   @RequestParam(value = "managerId") String managerId) throws NotFoundException {
+        return dataRequestService.managerDelegateTask(businessKey, reviewerId, managerId);
     }
 }

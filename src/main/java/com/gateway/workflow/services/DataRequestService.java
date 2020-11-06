@@ -1,5 +1,6 @@
 package com.gateway.workflow.services;
 
+import com.gateway.workflow.dtos.DarDelegateTasksDto;
 import com.gateway.workflow.dtos.DarHistoryAggDto;
 import com.gateway.workflow.dtos.DarStepReviewDto;
 import com.gateway.workflow.dtos.ManagerApprovedDto;
@@ -12,6 +13,8 @@ public interface DataRequestService {
     ManagerApprovedDto managerCompletedReview(String businessKey, ManagerApprovedDto managerApprovedDto) throws NotFoundException;
 
     DarStepReviewDto completeReviewerStep(String businessKey, DarStepReviewDto darStepReviewDto) throws NotFoundException;
+
+    DarDelegateTasksDto managerDelegateTask(String businessKey, String reviewerId, String managerId) throws NotFoundException;
 
     DarHistoryAggDto getDarRequestHistory(String businessKey) throws NotFoundException;
 }
