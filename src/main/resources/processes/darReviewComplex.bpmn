@@ -94,8 +94,16 @@
     <bpmn:sequenceFlow id="Flow_1skmsym" sourceRef="Activity_15vqq2k" targetRef="Event_17x8nfx" />
     <bpmn:serviceTask id="Activity_15vqq2k" camunda:class="com.gateway.workflow.services.DARNotificationService">
       <bpmn:incoming>Flow_1qite98</bpmn:incoming>
+      <bpmn:incoming>Flow_1emvzpg</bpmn:incoming>
       <bpmn:outgoing>Flow_1skmsym</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1pkr64q" cancelActivity="false" attachedToRef="Activity_14qdhlu">
+      <bpmn:outgoing>Flow_1emvzpg</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1ch1ztu">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${notifyDeadlinePassed}</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1emvzpg" sourceRef="Event_1pkr64q" targetRef="Activity_15vqq2k" />
   </bpmn:process>
   <bpmn:message id="Message_1ntke8y" name="updateStep" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -103,6 +111,10 @@
       <bpmndi:BPMNShape id="Participant_1j1jbdr_di" bpmnElement="Participant_1j1jbdr" isHorizontal="true">
         <dc:Bounds x="160" y="99" width="1430" height="581" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1skmsym_di" bpmnElement="Flow_1skmsym">
+        <di:waypoint x="1030" y="420" />
+        <di:waypoint x="1030" y="472" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_02ymxlf_di" bpmnElement="Flow_02ymxlf">
         <di:waypoint x="570" y="420" />
         <di:waypoint x="570" y="472" />
@@ -159,9 +171,10 @@
         <di:waypoint x="268" y="229" />
         <di:waypoint x="330" y="229" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1skmsym_di" bpmnElement="Flow_1skmsym">
-        <di:waypoint x="1030" y="420" />
-        <di:waypoint x="1030" y="472" />
+      <bpmndi:BPMNEdge id="Flow_1emvzpg_di" bpmnElement="Flow_1emvzpg">
+        <di:waypoint x="950" y="287" />
+        <di:waypoint x="950" y="380" />
+        <di:waypoint x="980" y="380" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0kpwbtz_di" bpmnElement="Event_0kpwbtz">
         <dc:Bounds x="232" y="211" width="36" height="36" />
@@ -213,6 +226,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_024ufqx_di" bpmnElement="Event_024ufqx">
         <dc:Bounds x="552" y="251" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mrupvy_di" bpmnElement="Event_1pkr64q">
+        <dc:Bounds x="932" y="251" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
