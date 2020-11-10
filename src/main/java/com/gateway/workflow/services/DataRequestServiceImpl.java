@@ -46,6 +46,7 @@ public class DataRequestServiceImpl implements DataRequestService {
         processVars.put("publisher", darStepReviewDto.getDataRequestPublisher());
         processVars.put("stepName", darStepReviewDto.getDataRequestStepName());
         processVars.put("notifyReviewer", darStepReviewDto.getNotifyReviewerSLA());
+        processVars.put("notifyDeadlinePassed", darStepReviewDto.getNotifyDeadlinePassedSLA());
         processVars.put("managerApproved", darStepReviewDto.getManagerApproved());
         processVars.put("phaseApproved", darStepReviewDto.getPhaseApproved());
         processVars.put("finalPhaseApproved", darStepReviewDto.getFinalPhaseApproved());
@@ -233,7 +234,8 @@ public class DataRequestServiceImpl implements DataRequestService {
                 .setVariable("userId", darStepReviewDto.getDataRequestUserId())
                 .setVariable("publisher", darStepReviewDto.getDataRequestPublisher())
                 .setVariable("stepName", darStepReviewDto.getDataRequestStepName())
-                .setVariable("notifyReviewerSLA", darStepReviewDto.getNotifyReviewerSLA())
+                .setVariable("notifyReviewer", darStepReviewDto.getNotifyReviewerSLA())
+                .setVariable("notifyDeadlinePassed", darStepReviewDto.getNotifyDeadlinePassedSLA())
                 .setVariable("managerApproved", darStepReviewDto.getManagerApproved())
                 .setVariable("phaseApproved", darStepReviewDto.getPhaseApproved())
                 .setVariable("finalPhaseApproved", darStepReviewDto.getFinalPhaseApproved())

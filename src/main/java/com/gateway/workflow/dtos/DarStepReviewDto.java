@@ -17,6 +17,7 @@ public class DarStepReviewDto {
     private String dataRequestPublisher;
     private String dataRequestStepName;
     private String notifyReviewerSLA;
+    private String notifyDeadlinePassedSLA;
     @Builder.Default
     private Boolean managerApproved = false;
     @Builder.Default
