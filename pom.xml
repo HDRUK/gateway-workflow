@@ -19,6 +19,7 @@
     <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
     <sonar.language>java</sonar.language>
     <sonar.coverage.exclusions>**/config/*.java,**/model/*.java,**/dto/*.java,**/util/*.java</sonar.coverage.exclusions>
+    <log4j2.version>2.15.0</log4j2.version>
   </properties>
 
   <groupId>com.gateway.workflow</groupId>
