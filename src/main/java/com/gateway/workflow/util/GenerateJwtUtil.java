@@ -18,13 +18,14 @@ public class GenerateJwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(GenerateJwtUtil.class);
 
+    // Generate a jwt for sending requests to the gateway
     public static String generateGatewayJWT(String systemUser) {
         String token = "";
         try {
             String secret = getJWTSecret();
             String sub = UUID.randomUUID().toString();
             String id = systemUser;
-            long iat = new Date().getTime() / 1000L;
+            long iat = new Date().getTime() / 1000L; // Convert the time to a long
 
             JwtPayloadDto payload = JwtPayloadDto.builder()
                     .sub(sub)

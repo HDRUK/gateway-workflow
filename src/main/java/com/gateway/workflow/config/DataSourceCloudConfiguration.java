@@ -25,8 +25,10 @@ public class DataSourceCloudConfiguration {
     @Bean
     @Primary
     public DataSource dataSource() throws IOException {
+        // Configure database connection settings
         HikariConfig config = new HikariConfig();
 
+        // Environment vars are mapped to the application properties
         String gcpProjectNumber = environment.getProperty(ApplicationPropertiesUtil.GCP_PROJECT_NUMBER);
         String gcpSecretId = environment.getProperty(ApplicationPropertiesUtil.GCP_SECRET_ID);
         String gcpSecretVersion = environment.getProperty(ApplicationPropertiesUtil.GCP_SECRET_VERSION);

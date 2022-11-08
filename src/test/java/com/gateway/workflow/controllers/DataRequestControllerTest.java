@@ -75,12 +75,10 @@ public class DataRequestControllerTest implements DarHistoryUtil, DarHistoryAggU
                 .andExpect(jsonPath("$.darHistoryList[0].dataRequestDateTime", is(DATA_REQUEST_DATETIME_01)))
                 .andExpect(jsonPath("$.darHistoryList[0].dataRequestPublisher", is(DATA_REQUEST_PUBLISHER_01)))
                 .andExpect(jsonPath("$.darHistoryList[0].dataRequestArchived", is(DATA_REQUEST_ARCHIVED_01)))
-                //.andExpect(jsonPath("$.darHistoryList[0].dataTimeStamp", is(date01)))
                 .andExpect(jsonPath("$.darHistoryList[1].dataRequestStatus", is(DATA_REQUEST_STATUS_02)))
                 .andExpect(jsonPath("$.darHistoryList[1].dataRequestDateTime", is(DATA_REQUEST_DATETIME_02)))
                 .andExpect(jsonPath("$.darHistoryList[1].dataRequestPublisher", is(DATA_REQUEST_PUBLISHER_02)))
                 .andExpect(jsonPath("$.darHistoryList[1].dataRequestArchived", is(DATA_REQUEST_ARCHIVED_02)));
-                //.andExpect(jsonPath("$.darHistoryList[1].dataTimeStamp", is(date02)));
 
         verify(dataRequestService, times(1)).getDarRequestHistory(any());
         reset(dataRequestService);
